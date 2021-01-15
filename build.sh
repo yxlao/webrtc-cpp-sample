@@ -52,8 +52,8 @@ fi
 ## Build
 # Change compiler to clang on linux
 if [ "${IS_LINUX}" = 'true' ]; then
-    export CC=cc
-    export CXX=c++
+    export CC=clang
+    export CXX=clang++
 fi
 
 readonly BUILD_PATH=${ROOT_PATH}/build
