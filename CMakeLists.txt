@@ -3,21 +3,26 @@ project(webrtc-cpp CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# Global flags.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wno-unused-parameter")
 
-add_executable(sample
-  main.cpp
-)
+# Global target properties.
+function(set_global_target_properties target)
+    # WEBRTC_LINUX, WEBRTC_MAC, WEBRTC_POSIX, WEBRTC_WIN.
+    target_compile_definitions(sample PRIVATE WEBRTC_LINUX=1 WEBRTC_POSIX=1)
 
-# WEBRTC_LINUX, WEBRTC_MAC, WEBRTC_POSIX, WEBRTC_WIN
-target_compile_definitions(sample PRIVATE WEBRTC_LINUX=1 WEBRTC_POSIX=1)
+    # Include.
+    target_include_directories(${target} PRIVATE SYSTEM
+        webrtc/include
+        webrtc/include/third_party/abseil-cpp
+        websocketpp/websocketpp
+        picojson
+    )
 
-set(LIBWEBRTC_PATH webrtc)
-target_include_directories(sample PRIVATE SYSTEM
-    webrtc/include
-    webrtc/include/third_party/abseil-cpp
-    websocketpp/websocketpp
-    picojson
-)
-target_link_directories(sample PRIVATE webrtc/lib)
-target_link_libraries(sample PRIVATE webrtc pthread)
+    # Link.
+    target_link_directories(${target} PRIVATE webrtc/lib)
+    target_link_libraries(${target} PRIVATE webrtc pthread)
+endfunction()
+
+add_executable(sample main.cpp)
+set_global_target_properties(sample)
