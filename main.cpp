@@ -1,11 +1,6 @@
-
-#include <picojson.h>
-
-#include <condition_variable>
 #include <iostream>
 #include <list>
 #include <memory>
-#include <mutex>
 #include <string>
 #include <thread>
 
