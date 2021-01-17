@@ -1,29 +1,9 @@
----
-BasedOnStyle: 'Google'
-AccessModifierOffset: -1
-AlignAfterOpenBracket: 'AlwaysBreak'
-AlignConsecutiveAssignments: true
-AllowShortFunctionsOnASingleLine: 'None'
-AlwaysBreakAfterReturnType: 'None'
-AlwaysBreakTemplateDeclarations: true
-BreakConstructorInitializersBeforeComma: true
-BreakConstructorInitializers: 'AfterColon'
-PenaltyReturnTypeOnItsOwnLine: 120
-ColumnLimit: 120
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-ConstructorInitializerIndentWidth: 4
-FixNamespaceComments: true
-IncludeBlocks: 'Regroup'
-IncludeCategories:
-  - Regex:           '^<.*\.h>'
-    Priority:        1
-  - Regex:           '^<.*'
-    Priority:        2
-  - Regex:           '.*'
-    Priority:        3
-IndentPPDirectives: 'AfterHash'
-PointerAlignment: 'Left'
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 80
+UseTab: Never
+Standard: c++14
+ContinuationIndentWidth: 8
+AccessModifierOffset: -4
+BinPackParameters: false
 SortIncludes: true
-SpaceAfterTemplateKeyword: false
-SpacesBeforeTrailingComments: 2
-UseTab: 'Never'
