@@ -4,6 +4,7 @@ Sample program for using WebRTC(DataChannel) on C++.
 
 ## TODO
 
+- [ ] Automated test binary
 - [ ] Global clean up
 - [ ] Add WebSocket deps
 - [ ] WebSocket for C++ <-> C++
