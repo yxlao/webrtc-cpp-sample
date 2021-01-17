@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 project(webrtc-cpp-sample)
 
 set(CMAKE_CXX_STANDARD 14)
-set(LIBWEBRTC_PATH local)
+set(LIBWEBRTC_PATH webrtc)
 include_directories("${LIBWEBRTC_PATH}/include")
 include_directories("${LIBWEBRTC_PATH}/include/third_party/abseil-cpp")
 
