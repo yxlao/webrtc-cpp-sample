@@ -1,12 +1,22 @@
 # WebRTC C++ sample
+
 Sample program for using WebRTC(DataChannel) on C++.
 
-# Requirement
+## TODO
 
-* Mac OSX
-* Ubuntu
+- [ ] Global clean up
+- [ ] Add WebSocket deps
+- [ ] WebSocket for C++ <-> C++
+- [ ] WebSocket for C++ <-> JS
+- [ ] Add STUN server support, proper handshake
+- [ ] Test across different subnets
 
-# Compile
+## Requirement
+
+- Mac OSX
+- Ubuntu
+
+## Compile
 
 ```sh
 $ cd <path to work>
@@ -17,7 +27,7 @@ $ git submodule update
 $ sh build.sh
 ```
 
-# Run
+## Run
 
 This sample use two consoles to try interprocess communication by WebRTC.
 It maybe cannot communicate over NAT each other, because it does not use ICE server.
