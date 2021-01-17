@@ -209,15 +209,6 @@ public:
 
 class WebRTCManager {
 public:
-    const std::string name;
-    std::unique_ptr<rtc::Thread> network_thread;
-    std::unique_ptr<rtc::Thread> worker_thread;
-    std::unique_ptr<rtc::Thread> signaling_thread;
-    rtc::scoped_refptr<webrtc::PeerConnectionFactoryInterface>
-            peer_connection_factory;
-    webrtc::PeerConnectionInterface::RTCConfiguration configuration;
-    Connection connection;
-
     WebRTCManager(const std::string name_) : name(name_), connection(name_) {}
 
     void on_sdp(std::function<void(const std::string &)> f) {
@@ -394,4 +385,14 @@ public:
         worker_thread->Stop();
         signaling_thread->Stop();
     }
+
+public:
+    const std::string name;
+    std::unique_ptr<rtc::Thread> network_thread;
+    std::unique_ptr<rtc::Thread> worker_thread;
+    std::unique_ptr<rtc::Thread> signaling_thread;
+    rtc::scoped_refptr<webrtc::PeerConnectionFactoryInterface>
+            peer_connection_factory;
+    webrtc::PeerConnectionInterface::RTCConfiguration configuration;
+    Connection connection;
 };
