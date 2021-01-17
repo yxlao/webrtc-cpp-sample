@@ -9,7 +9,7 @@ Sample program for using WebRTC(DataChannel) on C++.
 - [ ] WebSocket for C++ <-> C++
 - [ ] WebSocket for C++ <-> JS
 - [ ] Add STUN server support, proper handshake
-- [ ] Test across different subnets
+- [x] Test across different subnets
 
 ## Requirement
 
