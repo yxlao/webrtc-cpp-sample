@@ -5,4 +5,3 @@ sample
 build/*
 CMakeFiles/*
 xcode/*
-local/*
