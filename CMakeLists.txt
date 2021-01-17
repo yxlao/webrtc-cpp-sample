@@ -26,3 +26,9 @@ endfunction()
 
 add_executable(sample main.cpp)
 set_global_target_properties(sample)
+
+add_executable(server server.cpp)
+set_global_target_properties(server)
+
+add_executable(client client.cpp)
+set_global_target_properties(client)
