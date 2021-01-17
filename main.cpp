@@ -7,23 +7,14 @@
 #include <string>
 #include <thread>
 
-// Define the macros to fit compile environment.
-// 環境に合わせてマクロを定義する。
-//#define WEBRTC_ANDROID 1
-//#define WEBRTC_IOS 1
-//#define WEBRTC_LINUX 1
-//#define WEBRTC_MAC 1
-//#define WEBRTC_POSIX 1
-//#define WEBRTC_WIN 1
-
-// Header files related with WebRTC.
-// WebRTC関連のヘッダ
+// WebRTC headers.
 #include <api/create_peerconnection_factory.h>
 #include <rtc_base/ssl_adapter.h>
 #include <rtc_base/thread.h>
 #include <system_wrappers/include/field_trial.h>
 
-#include "picojson/picojson.h"
+// Json headers.
+#include <picojson.h>
 
 struct Ice {
     std::string candidate;
