@@ -29,12 +29,13 @@ $ sh build.sh
 
 ## Run
 
-This sample use two consoles to try interprocess communication by WebRTC.
+This sample use two consoles to try inter-process communication by WebRTC.
 It maybe cannot communicate over NAT each other, because it does not use ICE server.
 
 ## Connection
 
-memo : On this sample, Some commands requireing parameter need line of only a semicolon after parameter.
+memo : On this sample, Some commands requiring parameter need line of only a
+semicolon after parameter.
 
 At CONSOLE-1.
 
