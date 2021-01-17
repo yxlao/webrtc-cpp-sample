@@ -14,7 +14,7 @@ void OnWebSocketMessage(WebSocketServer* ws_server,
     const std::string message = message_ptr->get_payload();
     std::cout << "[Server] Received message: " << message << std::endl;
 
-    if (message == "close") {
+    if (message == "close_server") {
         ws_server->close(hdl, websocketpp::close::status::normal, "");
         std::cout << "[Server] Server WebSocket closed." << std::endl;
     }
