@@ -1,12 +1,8 @@
-
-// WebRTC headers.
 #include <api/create_peerconnection_factory.h>
+#include <picojson.h>
 #include <rtc_base/ssl_adapter.h>
 #include <rtc_base/thread.h>
 #include <system_wrappers/include/field_trial.h>
-
-// Json headers.
-#include <picojson.h>
 
 struct Ice {
     std::string candidate;
@@ -211,7 +207,7 @@ public:
           ssdo(new rtc::RefCountedObject<SSDO>(*this)) {}
 };
 
-class Wrapper {
+class WebRTCManager {
 public:
     const std::string name;
     std::unique_ptr<rtc::Thread> network_thread;
@@ -222,7 +218,7 @@ public:
     webrtc::PeerConnectionInterface::RTCConfiguration configuration;
     Connection connection;
 
-    Wrapper(const std::string name_) : name(name_), connection(name_) {}
+    WebRTCManager(const std::string name_) : name(name_), connection(name_) {}
 
     void on_sdp(std::function<void(const std::string &)> f) {
         connection.on_sdp = f;

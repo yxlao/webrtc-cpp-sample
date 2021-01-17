@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     webrtc::field_trial::InitFieldTrialsFromString("");
     rtc::InitializeSSL();
 
-    Wrapper webrtc("");
+    WebRTCManager manager("");
     std::list<Ice> ice_list;
 
     std::string line;
@@ -24,16 +24,16 @@ int main(int argc, char *argv[]) {
     std::string sdp_type;
     bool is_cmd_mode = true;
 
-    webrtc.on_ice([&](const Ice &ice) { ice_list.push_back(ice); });
-    webrtc.on_message([&](const std::string &message) {
+    manager.on_ice([&](const Ice &ice) { ice_list.push_back(ice); });
+    manager.on_message([&](const std::string &message) {
         std::cout << message << std::endl;
     });
-    webrtc.on_sdp([&](const std::string &sdp) {
+    manager.on_sdp([&](const std::string &sdp) {
         std::cout << sdp_type << " sdp:begin" << std::endl
                   << sdp << sdp_type << " sdp:end" << std::endl;
     });
 
-    webrtc.init();
+    manager.init();
 
     while (std::getline(std::cin, line)) {
         if (is_cmd_mode) {
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 
             } else if (line == "sdp1") {
                 sdp_type = "Offer";
-                webrtc.create_offer_sdp();
+                manager.create_offer_sdp();
 
             } else if (line == "sdp2") {
                 command = "sdp2";
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
                 is_cmd_mode = false;
 
             } else if (line == "quit") {
-                webrtc.quit();
+                manager.quit();
                 break;
 
             } else {
@@ -86,10 +86,10 @@ int main(int argc, char *argv[]) {
             if (line == ";") {
                 if (command == "sdp2") {
                     sdp_type = "Answer";
-                    webrtc.create_answer_sdp(parameter);
+                    manager.create_answer_sdp(parameter);
 
                 } else if (command == "sdp3") {
-                    webrtc.push_reply_sdp(parameter);
+                    manager.push_reply_sdp(parameter);
 
                 } else if (command == "ice2") {
                     picojson::value v;
@@ -108,10 +108,10 @@ int main(int argc, char *argv[]) {
                         ice.sdp_mid = ice_o.at("sdpMid").get<std::string>();
                         ice.sdp_mline_index = static_cast<int>(
                                 ice_o.at("sdpMLineIndex").get<double>());
-                        webrtc.push_ice(ice);
+                        manager.push_ice(ice);
                     }
                 } else if (command == "send") {
-                    webrtc.send(parameter);
+                    manager.send(parameter);
                 }
 
                 parameter = "";
