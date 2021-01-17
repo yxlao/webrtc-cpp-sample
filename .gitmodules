@@ -1,3 +1,6 @@
 [submodule "picojson"]
 	path = picojson
 	url = https://github.com/kazuho/picojson.git
+[submodule "websocketpp"]
+	path = websocketpp
+	url = https://github.com/zaphoyd/websocketpp.git
