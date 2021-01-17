@@ -27,8 +27,7 @@ void OnWebSocketOpen(WebSocketServer* ws_server,
                     websocketpp::frame::opcode::text);
 }
 
-void OnWebSocketClose(WebSocketServer* ws_server,
-                      websocketpp::connection_hdl hdl) {
+void OnWebSocketClose(WebSocketServer* ws_server) {
     std::cout << "[Server::OnWebSocketClose]" << std::endl;
 }
 
@@ -43,7 +42,7 @@ int main() {
     WebSocketServer ws_server;
     ws_server.set_message_handler(bind(OnWebSocketMessage, &ws_server, _1, _2));
     ws_server.set_open_handler(bind(OnWebSocketOpen, &ws_server, _1));
-    ws_server.set_close_handler(bind(OnWebSocketClose, &ws_server, _1));
+    ws_server.set_close_handler(bind(OnWebSocketClose, &ws_server));
     ws_server.init_asio();
     ws_server.set_reuse_addr(true);
     ws_server.listen(8888);
