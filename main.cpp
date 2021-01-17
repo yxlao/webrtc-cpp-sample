@@ -36,7 +36,7 @@ public:
     std::function<void(const std::string &)> on_message;
 
     // When the status of the DataChannel changes, determine if the connection
-    // is complete. DataChannelのstateが変化したら、接続が完了したか確かめる。
+    // is complete.
     void on_state_change() {
         std::cout << "state: " << data_channel->state() << std::endl;
         if (data_channel->state() == webrtc::DataChannelInterface::kOpen &&
@@ -47,7 +47,6 @@ public:
 
     // After the SDP is successfully created, it is set as a LocalDescription
     // and displayed as a string to be passed to the other party.
-    // SDPの作成が成功したら、LocalDescriptionとして設定し、相手に渡す文字列として表示する。
     void on_success_csd(webrtc::SessionDescriptionInterface *desc) {
         peer_connection->SetLocalDescription(ssdo, desc);
 
@@ -57,7 +56,6 @@ public:
     }
 
     // Convert the got ICE.
-    // 取得したICEを変換する。
     void on_ice_candidate(const webrtc::IceCandidateInterface *candidate) {
         Ice ice;
         candidate->ToString(&ice.candidate);
@@ -99,7 +97,6 @@ public:
                       << ", " << parent.data_channel.get() << ")" << std::endl;
             // The request recipient gets a DataChannel instance in the
             // onDataChannel event.
-            // リクエスト受信側は、onDataChannelイベントでDataChannelインスタンスをもらう。
             parent.data_channel = data_channel;
             parent.data_channel->RegisterObserver(&parent.dco);
         };
@@ -148,7 +145,6 @@ public:
         };
 
         // Message receipt.
-        // メッセージ受信。
         void OnMessage(const webrtc::DataBuffer &buffer) override {
             std::cout << parent.name << ":" << std::this_thread::get_id() << ":"
                       << "DataChannelObserver::Message" << std::endl;
@@ -257,7 +253,6 @@ public:
                   << "init Main thread" << std::endl;
 
         // Using Google's STUN server.
-        // GoogleのSTUNサーバを利用。
         webrtc::PeerConnectionInterface::IceServer ice_server;
         ice_server.uri = "stun:stun.l.google.com:19302";
         configuration.servers.push_back(ice_server);
@@ -294,7 +289,6 @@ public:
         webrtc::DataChannelInit config;
 
         // Configuring DataChannel.
-        // DataChannelの設定。
         connection.data_channel = connection.peer_connection->CreateDataChannel(
                 "data_channel", &config);
         connection.data_channel->RegisterObserver(&connection.dco);
@@ -403,7 +397,6 @@ public:
                   << "quit" << std::endl;
 
         // Close with the thread running.
-        // スレッドが起動した状態でCloseする。
         connection.peer_connection->Close();
         connection.peer_connection = nullptr;
         connection.data_channel = nullptr;
