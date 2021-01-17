@@ -470,9 +470,9 @@ int main(int argc, char *argv[]) {
                 for (auto &ice : ice_list) {
                     picojson::object ice_o;
                     ice_o.insert(std::make_pair("candidate", ice.candidate));
-                    ice_o.insert(std::make_pair("sdp_mid", ice.sdp_mid));
+                    ice_o.insert(std::make_pair("sdpMid", ice.sdp_mid));
                     ice_o.insert(std::make_pair(
-                            "sdp_mline_index",
+                            "sdpMLineIndex",
                             static_cast<double>(ice.sdp_mline_index)));
                     ice_a.push_back(picojson::value(ice_o));
                 }
@@ -518,9 +518,9 @@ int main(int argc, char *argv[]) {
                         Ice ice;
                         ice.candidate =
                                 ice_o.at("candidate").get<std::string>();
-                        ice.sdp_mid = ice_o.at("sdp_mid").get<std::string>();
+                        ice.sdp_mid = ice_o.at("sdpMid").get<std::string>();
                         ice.sdp_mline_index = static_cast<int>(
-                                ice_o.at("sdp_mline_index").get<double>());
+                                ice_o.at("sdpMLineIndex").get<double>());
                         webrtc.push_ice(ice);
                     }
                 } else if (command == "send") {
