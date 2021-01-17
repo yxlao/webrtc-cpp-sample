@@ -4,7 +4,7 @@ project(webrtc-cpp CXX)
 set(CMAKE_CXX_STANDARD 14)
 
 # Global flags.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wno-unused-parameter")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wno-unused-parameter -std=c++11")
 
 # Global target properties.
 function(set_global_target_properties target)
@@ -15,8 +15,9 @@ function(set_global_target_properties target)
     target_include_directories(${target} PRIVATE SYSTEM
         webrtc/include
         webrtc/include/third_party/abseil-cpp
-        websocketpp/websocketpp
+        websocketpp
         picojson
+        asio/asio/include
     )
 
     # Link.
