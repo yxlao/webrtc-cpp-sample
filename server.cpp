@@ -18,7 +18,28 @@ class WebSocketServerManager {
     using WebSocketServer = websocketpp::server<websocketpp::config::asio>;
 
 public:
-    WebSocketServerManager(uint16_t port) : port_(port), ws_server_() {
+    WebSocketServerManager(uint16_t port)
+        : port_(port), ws_server_(), rtc_manager_("server") {
+        rtc_manager_.on_ice([&](const Ice& ice) {
+            std::cout << "[RTCServer::on_ice] " << std::endl;
+            ice_list_.push_back(ice);
+        });
+        rtc_manager_.on_message([&](const std::string& message) {
+            std::cout << "[RTCServer::on_message] " << message << std::endl;
+        });
+        rtc_manager_.on_sdp([&](const std::string& sdp) {
+            std::cout << "[RTCServer::on_sdp] " << std::endl;
+            std::cout << "========== Answer SDP begin ==========" << std::endl;
+            std::cout << sdp;
+            std::cout << "========== Answer SDP end ============" << std::endl;
+            Json::Value json;
+            json["type"] = "answer";
+            json["answer"] = sdp;
+            // ws_client_.send(ws_hdl_, JsonToString(json),
+            //                 websocketpp::frame::opcode::text);
+        });
+        rtc_manager_.init();
+
         ws_server_.set_open_handler(bind(&WebSocketServerManager::OpenHandler,
                                          this, &ws_server_, _1));
         ws_server_.set_close_handler(
@@ -58,6 +79,7 @@ public:
             std::cout << "========== Offer SDP begin ==========" << std::endl;
             std::cout << offer;
             std::cout << "========== Offer SDP end ============" << std::endl;
+            rtc_manager_.create_answer_sdp(offer);
         } else {
             std::cerr << "Unkown json message type: " << type << std::endl;
         }
@@ -66,6 +88,14 @@ public:
 private:
     uint16_t port_;
     WebSocketServer ws_server_;
+
+    /// WebRTCManger.
+    WebRTCManager rtc_manager_;
+
+    /// List of ICE candidates. It updates when rtc_manager_.on_ice() is
+    /// triggered. The server and client exchange their ICE candidate list and
+    /// select a candidate to set up the connection.
+    std::list<Ice> ice_list_;
 };
 
 int main() {
