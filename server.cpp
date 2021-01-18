@@ -46,8 +46,9 @@ public:
         // DataChannel created. WebSocketClientManager exits its blocking state.
         rtc_manager_.on_success([&]() {
             std::cout << "[RTCServer::on_success]" << std::endl;
-            // ws_server_.close(ws_hdl_, websocketpp::close::status::normal,
-            // "");
+            ws_server_.pause_reading(ws_hdl_);
+            ws_server_.close(ws_hdl_, websocketpp::close::status::normal, "");
+            ws_server_.stop_listening();
         });
         rtc_manager_.init();
 
@@ -65,7 +66,7 @@ public:
         ws_server_.run();
     }
 
-    virtual ~WebSocketServerManager() {}
+    virtual ~WebSocketServerManager() { ws_server_.stop_listening(); }
 
     void OpenHandler(WebSocketServer* ws_server,
                      websocketpp::connection_hdl hdl) {

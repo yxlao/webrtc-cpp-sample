@@ -45,11 +45,8 @@ public:
                             websocketpp::frame::opcode::text);
         });
         // DataChannel created. WebSocketClientManager exits its blocking state.
-        rtc_manager_.on_success([&]() {
-            std::cout << "[RTCClient::on_success]" << std::endl;
-            // ws_client_.close(ws_hdl_, websocketpp::close::status::normal,
-            // "");
-        });
+        rtc_manager_.on_success(
+                [&]() { std::cout << "[RTCClient::on_success]" << std::endl; });
         rtc_manager_.init();
 
         ws_client_.set_open_handler(bind(&WebSocketClientManager::OpenHandler,
