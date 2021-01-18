@@ -31,6 +31,26 @@ public:
         });
         rtc_manager_.on_message([&](const std::string& message) {
             std::cout << "[RTCServer::on_message] " << message << std::endl;
+            if (message == "exit") {
+                std::cout << "message == exit, exiting..." << std::endl;
+                rtc_manager_.quit();
+                // TODO: Use this as a proxy to stop the main event loop. Will
+                // be replaced in the future.
+                ws_server_.stop_listening();
+            } else {
+                std::cout << "========= Receive message begin ========="
+                          << std::endl;
+                std::cout << message << std::endl;
+                std::cout << "========= Receive message end ==========="
+                          << std::endl;
+                std::string reply_message = "Echo of: " + message;
+                std::cout << "========= Send message begin ========="
+                          << std::endl;
+                std::cout << reply_message << std::endl;
+                std::cout << "========= Send message end ==========="
+                          << std::endl;
+                rtc_manager_.send(reply_message);
+            }
         });
         rtc_manager_.on_sdp([&](const std::string& sdp) {
             std::cout << "[RTCServer::on_sdp] " << std::endl;
@@ -48,7 +68,6 @@ public:
             std::cout << "[RTCServer::on_success]" << std::endl;
             ws_server_.pause_reading(ws_hdl_);
             ws_server_.close(ws_hdl_, websocketpp::close::status::normal, "");
-            ws_server_.stop_listening();
         });
         rtc_manager_.init();
 
@@ -130,6 +149,6 @@ private:
 int main() {
     // TODO: add try-catch for WS connection.
     WebSocketServerManager ws_server_manager(8888);
-    std::cout << "DataChannel established" << std::endl;
+    std::cout << "Server exits gracefully." << std::endl;
     return 0;
 }

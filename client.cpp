@@ -31,7 +31,10 @@ public:
                             websocketpp::frame::opcode::text);
         });
         rtc_manager_.on_message([&](const std::string& message) {
-            std::cout << "[RTCClient::on_message] " << message << std::endl;
+            std::cout << "[RTCClient::on_message]" << std::endl;
+            std::cout << "========= Receive message begin ======" << std::endl;
+            std::cout << message << std::endl;
+            std::cout << "========= Receive message end ========" << std::endl;
         });
         rtc_manager_.on_sdp([&](const std::string& sdp) {
             std::cout << "[RTCClient::on_sdp] " << std::endl;
@@ -112,6 +115,11 @@ public:
         }
     }
 
+public:
+    /// WebRTCManger.
+    // TODO: Return this in a factory function.
+    WebRTCManager rtc_manager_;
+
 private:
     /// WebSocket server URI that the client will connect to, in the form of
     /// "address:port". The server shall listen to the same port. This is not
@@ -124,9 +132,6 @@ private:
     /// does not take care of sending/receiving handshake messages. The
     /// WebSocket will be closed once the WebRTC connection is established.
     WebSocketClient ws_client_;
-
-    /// WebRTCManger.
-    WebRTCManager rtc_manager_;
 
     /// WebSocket connection handler uniquely identifies a WebSocket connection.
     /// Whenever there is a WebSocket callback, we update this handler. In our
@@ -142,6 +147,21 @@ private:
 int main() {
     // TODO: add try-catch for WS connection.
     WebSocketClientManager ws_client_manager("ws://localhost:8888");
-    std::cout << "DataChannel established" << std::endl;
+
+    std::string message;
+    while (std::getline(std::cin, message)) {
+        if (message == "exit") {
+            std::cout << "message == exit, exiting..." << std::endl;
+            ws_client_manager.rtc_manager_.send("exit");
+            ws_client_manager.rtc_manager_.quit();
+            break;
+        } else {
+            std::cout << "========= Send message begin =========" << std::endl;
+            std::cout << message << std::endl;
+            std::cout << "========= Send message end ===========" << std::endl;
+            ws_client_manager.rtc_manager_.send(message);
+        }
+    }
+    std::cout << "Client exits gracefully." << std::endl;
     return 0;
 }
