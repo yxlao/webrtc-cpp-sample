@@ -35,15 +35,15 @@ public:
             Json::Value json;
             json["type"] = "answer";
             json["answer"] = sdp;
-            // ws_client_.send(ws_hdl_, JsonToString(json),
-            //                 websocketpp::frame::opcode::text);
+            ws_server_.send(ws_hdl_, JsonToString(json),
+                            websocketpp::frame::opcode::text);
         });
         rtc_manager_.init();
 
         ws_server_.set_open_handler(bind(&WebSocketServerManager::OpenHandler,
                                          this, &ws_server_, _1));
-        ws_server_.set_close_handler(
-                bind(&WebSocketServerManager::CloseHandler, this, &ws_server_));
+        ws_server_.set_close_handler(bind(&WebSocketServerManager::CloseHandler,
+                                          this, &ws_server_, _1));
         ws_server_.set_message_handler(
                 bind(&WebSocketServerManager::MessageHandler, this, &ws_server_,
                      _1, _2));
@@ -58,16 +58,20 @@ public:
 
     void OpenHandler(WebSocketServer* ws_server,
                      websocketpp::connection_hdl hdl) {
+        ws_hdl_ = hdl;
         std::cout << "[WebSocketServerManager::OpenHandler]" << std::endl;
     }
 
-    void CloseHandler(WebSocketServer* ws_server) {
+    void CloseHandler(WebSocketServer* ws_server,
+                      websocketpp::connection_hdl hdl) {
+        ws_hdl_ = hdl;
         std::cout << "[WebSocketServerManager::CloseHandler]" << std::endl;
     }
 
     void MessageHandler(WebSocketServer* ws_server,
                         websocketpp::connection_hdl hdl,
                         WebSocketServer::message_ptr message_ptr) {
+        ws_hdl_ = hdl;
         const std::string message = message_ptr->get_payload();
         std::cout << "[WebSocketServerManager::MessageHandler]" << std::endl;
         std::cout << "Received message: " << message << std::endl;
@@ -91,6 +95,11 @@ private:
 
     /// WebRTCManger.
     WebRTCManager rtc_manager_;
+
+    /// WebSocket connection handler uniquely identifies a WebSocket connection.
+    /// Whenever there is a WebSocket callback, we update this handler. In our
+    /// use case, they shall all be the same one.
+    websocketpp::connection_hdl ws_hdl_;
 
     /// List of ICE candidates. It updates when rtc_manager_.on_ice() is
     /// triggered. The server and client exchange their ICE candidate list and
