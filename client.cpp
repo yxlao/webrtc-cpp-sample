@@ -3,7 +3,9 @@
 #include <iostream>
 #include <string>
 
-#include "webrtc_manager.h"
+#define ASIO_STANDALONE  // Use ASIO standalone lib instead of boost.
+#include <websocketpp/client.hpp>
+#include <websocketpp/config/asio_no_tls_client.hpp>
 
 using websocketpp::lib::bind;
 using websocketpp::lib::placeholders::_1;
