@@ -16,7 +16,6 @@ ExternalProject_Add(
         -DBUILD_STATIC_LIBS=ON
         -DBUILD_OBJECT_LIBS=OFF
         -DJSONCPP_WITH_TESTS=OFF
-    BUILD_ALWAYS ON
 )
 
 ExternalProject_Get_Property(ext_jsoncpp INSTALL_DIR)
