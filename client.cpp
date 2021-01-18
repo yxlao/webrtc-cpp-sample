@@ -61,13 +61,13 @@ public:
     static void OpenHandler(WebSocketClient* ws_client,
                             websocketpp::connection_hdl hdl) {
         std::cout << "[WebSocketClientManager::OpenHandler]" << std::endl;
+        ws_client->send(hdl, "Hello from WebSocketClientManager.",
+                        websocketpp::frame::opcode::text);
     }
 
     static void CloseHandler(WebSocketClient* ws_client,
                              websocketpp::connection_hdl hdl) {
         std::cout << "[WebSocketClientManager::CloseHandler]" << std::endl;
-        ws_client->send(hdl, "Hello from WebSocketClientManager.",
-                        websocketpp::frame::opcode::text);
     }
 
     static void MessageHandler(WebSocketClient* ws_client,
