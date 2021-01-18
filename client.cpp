@@ -52,6 +52,9 @@ public:
                 [&]() { std::cout << "[RTCClient::on_success]" << std::endl; });
         rtc_manager_.init();
 
+        ws_client_.clear_access_channels(
+                websocketpp::log::alevel::frame_header |
+                websocketpp::log::alevel::frame_payload);
         ws_client_.set_open_handler(bind(&WebSocketClientManager::OpenHandler,
                                          this, &ws_client_, _1));
         ws_client_.set_close_handler(bind(&WebSocketClientManager::CloseHandler,

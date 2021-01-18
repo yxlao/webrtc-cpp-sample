@@ -71,6 +71,9 @@ public:
         });
         rtc_manager_.init();
 
+        ws_server_.clear_access_channels(
+                websocketpp::log::alevel::frame_header |
+                websocketpp::log::alevel::frame_payload);
         ws_server_.set_open_handler(bind(&WebSocketServerManager::OpenHandler,
                                          this, &ws_server_, _1));
         ws_server_.set_close_handler(bind(&WebSocketServerManager::CloseHandler,
