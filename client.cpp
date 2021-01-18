@@ -34,7 +34,7 @@ public:
             std::cout << "========== Offer SDP end ============" << std::endl;
             Json::Value json;
             json["type"] = "offer";
-            json["value"] = sdp;
+            json["offer"] = sdp;
             ws_client_.send(
                     ws_hdl_,
                     Json::writeString(Json::StreamWriterBuilder(), json),
@@ -110,6 +110,7 @@ private:
 };
 
 int main() {
+    // TODO: add try-catch for WS connection.
     WebSocketClientManager ws_client_manager("ws://localhost:8888");
     return 0;
 }

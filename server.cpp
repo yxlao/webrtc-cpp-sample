@@ -1,3 +1,5 @@
+#include <json/json.h>
+
 #include <iostream>
 #include <string>
 
@@ -33,8 +35,6 @@ public:
     void OpenHandler(WebSocketServer* ws_server,
                      websocketpp::connection_hdl hdl) {
         std::cout << "[WebSocketServerManager::OpenHandler]" << std::endl;
-        ws_server->send(hdl, "Hello from server.",
-                        websocketpp::frame::opcode::text);
     }
 
     void CloseHandler(WebSocketServer* ws_server) {
@@ -45,9 +45,28 @@ public:
                         websocketpp::connection_hdl hdl,
                         WebSocketServer::message_ptr message_ptr) {
         const std::string message = message_ptr->get_payload();
-        std::cout << "[WebSocketServerManager::MessageHandler] Received "
-                     "message: "
-                  << message << std::endl;
+        std::cout << "[WebSocketServerManager::MessageHandler]" << std::endl;
+        std::cout << "Received message: " << message << std::endl;
+
+        Json::Value json;
+        std::string err;
+        Json::CharReaderBuilder builder;
+        const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
+        if (!reader->parse(message.c_str(), message.c_str() + message.length(),
+                           &json, &err)) {
+            std::cerr << "Failed to parse json message, error: " << err
+                      << std::endl;
+        }
+
+        const std::string type = json.get("type", "").asString();
+        if (type == "offer") {
+            const std::string offer = json.get("offer", "").asString();
+            std::cout << "========== Offer SDP begin ==========" << std::endl;
+            std::cout << offer;
+            std::cout << "========== Offer SDP end ============" << std::endl;
+        } else {
+            std::cerr << "Unkown json message type: " << type << std::endl;
+        }
     }
 
 private:
@@ -56,6 +75,7 @@ private:
 };
 
 int main() {
+    // TODO: add try-catch for WS connection.
     WebSocketServerManager ws_server_manager(8888);
     return 0;
 }
