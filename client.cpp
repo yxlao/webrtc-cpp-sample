@@ -26,6 +26,17 @@ void OnWebSocketClose(WebSocketClient* ws_client,
     std::cout << "[Client::OnWebSocketClose]" << std::endl;
 }
 
+// class WebSocketClient {
+//     using Client = websocketpp::client<websocketpp::config::asio_client>;
+
+// public:
+//     WebSocketClient(const std::string& uri) : uri_(uri) {}
+//     ~WebSocketClient() {}
+
+// private:
+//     std::string uri_;
+// };
+
 int main() {
     using websocketpp::lib::bind;
     using websocketpp::lib::placeholders::_1;
@@ -53,11 +64,10 @@ int main() {
     return 0;
 }
 
+// TODO:
 // int main() {
-//     // Simple client that can send and receive messages.
-//     WebRTCClient rtc_client = InitWebRTCClient("ws://localhost:8888");
-//     rtc_client.send("Hello world!");
-//     rtc_client.send("CLOSE_SERVER");
-//     rtc_client.close();
+//     WebRTCManager rtc_manager =
+//             WebSocketClient::InitWebRTC("ws://localhost:8888");
+//     rtc_manager.send("Hello world from client!");
 //     return 0;
 // }

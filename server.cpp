@@ -54,10 +54,9 @@ int main() {
     return 0;
 }
 
-// TODO: goal
+// TODO:
 // int main() {
-//     // Simple echo server that receives client's message and reply back.
-//     WebRTCServer rtc_server = InitWebRTCServer("8888");
-//     rtc_server.run();
+//     WebRTCManager rtc_manager = WebSocketServer::InitWebRTC("8888");
+//     rtc_manager.send("Hello, world from server!");
 //     return 0;
 // }
