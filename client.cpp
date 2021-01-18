@@ -7,6 +7,7 @@
 #include <websocketpp/client.hpp>
 #include <websocketpp/config/asio_no_tls_client.hpp>
 
+#include "json_utils.h"
 #include "webrtc_manager.h"
 
 using websocketpp::lib::bind;
@@ -35,10 +36,8 @@ public:
             Json::Value json;
             json["type"] = "offer";
             json["offer"] = sdp;
-            ws_client_.send(
-                    ws_hdl_,
-                    Json::writeString(Json::StreamWriterBuilder(), json),
-                    websocketpp::frame::opcode::text);
+            ws_client_.send(ws_hdl_, JsonToString(json),
+                            websocketpp::frame::opcode::text);
         });
         rtc_manager_.init();
 

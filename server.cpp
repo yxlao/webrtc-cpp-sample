@@ -7,6 +7,9 @@
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
+#include "json_utils.h"
+#include "webrtc_manager.h"
+
 using websocketpp::lib::bind;
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
@@ -48,15 +51,7 @@ public:
         std::cout << "[WebSocketServerManager::MessageHandler]" << std::endl;
         std::cout << "Received message: " << message << std::endl;
 
-        Json::Value json;
-        std::string err;
-        Json::CharReaderBuilder builder;
-        const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
-        if (!reader->parse(message.c_str(), message.c_str() + message.length(),
-                           &json, &err)) {
-            std::cerr << "Failed to parse json message, error: " << err
-                      << std::endl;
-        }
+        Json::Value json = StringToJson(message);
 
         const std::string type = json.get("type", "").asString();
         if (type == "offer") {
