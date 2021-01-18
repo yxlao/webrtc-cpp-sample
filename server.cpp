@@ -33,18 +33,16 @@ public:
         });
         rtc_manager_.on_message([&](const std::string& message) {
             std::cout << "[RTCServer::on_message] " << message << std::endl;
+            std::cout << "========= Receive message begin ========="
+                      << std::endl;
+            std::cout << message << std::endl;
+            std::cout << "========= Receive message end ==========="
+                      << std::endl;
             if (message == "exit") {
-                std::cout << "got message == exit, exiting..." << std::endl;
                 // TODO: Use this as a proxy to stop the main event loop. Will
                 // be replaced in the future.
                 ws_server_.stop_listening();
-                std::cout << "!!!!!!!!!!!!!!!!new debug 1" << std::endl;
             } else {
-                std::cout << "========= Receive message begin ========="
-                          << std::endl;
-                std::cout << message << std::endl;
-                std::cout << "========= Receive message end ==========="
-                          << std::endl;
                 std::string reply_message = "Echo of: " + message;
                 std::cout << "========= Send message begin ========="
                           << std::endl;
