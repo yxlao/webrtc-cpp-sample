@@ -77,8 +77,21 @@ public:
                         WebSocketClient::message_ptr message_ptr) {
         ws_hdl_ = hdl;
         const std::string message = message_ptr->get_payload();
-        std::cout << "[WebSocketClientManager::MessageHandler] Received: "
-                  << message << std::endl;
+        std::cout << "[WebSocketClientManager::MessageHandler]" << std::endl;
+        std::cout << "Received message: " << message << std::endl;
+
+        const Json::Value json = StringToJson(message);
+        const std::string type = json.get("type", "").asString();
+
+        if (type == "answer") {
+            const std::string answer = json.get("answer", "").asString();
+            std::cout << "========== Answer SDP begin ==========" << std::endl;
+            std::cout << answer;
+            std::cout << "========== Answer SDP end ============" << std::endl;
+            rtc_manager_.push_reply_sdp(answer);
+        } else {
+            std::cerr << "Unkown json message type: " << type << std::endl;
+        }
     }
 
 private:

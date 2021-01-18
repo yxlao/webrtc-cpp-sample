@@ -78,6 +78,7 @@ public:
 
         const Json::Value json = StringToJson(message);
         const std::string type = json.get("type", "").asString();
+
         if (type == "offer") {
             const std::string offer = json.get("offer", "").asString();
             std::cout << "========== Offer SDP begin ==========" << std::endl;
