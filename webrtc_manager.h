@@ -415,15 +415,30 @@ public:
         std::cout << name << ":" << std::this_thread::get_id() << ":"
                   << "quit" << std::endl;
 
+        std::cout << "debug 6" << std::endl;
+
         // Close with the thread running.
         connection.peer_connection->Close();
+
         connection.peer_connection = nullptr;
+        std::cout << "debug 8.1" << std::endl;
+
         connection.data_channel = nullptr;
+        std::cout << "debug 8.2" << std::endl;
+
         peer_connection_factory = nullptr;
+        std::cout << "debug 8.3" << std::endl;
+
+        std::cout << "debug 8" << std::endl;
 
         network_thread->Stop();
+        std::cout << "debug 9" << std::endl;
+
         worker_thread->Stop();
+        std::cout << "debug 10" << std::endl;
+
         signaling_thread->Stop();
+        std::cout << "debug 11" << std::endl;
     }
 
 public:

@@ -1,7 +1,9 @@
 #include <json/json.h>
 
+#include <chrono>
 #include <iostream>
 #include <string>
+#include <thread>
 
 #define ASIO_STANDALONE  // Use ASIO standalone lib instead of boost.
 #include <websocketpp/config/asio_no_tls.hpp>
@@ -32,11 +34,11 @@ public:
         rtc_manager_.on_message([&](const std::string& message) {
             std::cout << "[RTCServer::on_message] " << message << std::endl;
             if (message == "exit") {
-                std::cout << "message == exit, exiting..." << std::endl;
-                rtc_manager_.quit();
+                std::cout << "got message == exit, exiting..." << std::endl;
                 // TODO: Use this as a proxy to stop the main event loop. Will
                 // be replaced in the future.
                 ws_server_.stop_listening();
+                std::cout << "!!!!!!!!!!!!!!!!new debug 1" << std::endl;
             } else {
                 std::cout << "========= Receive message begin ========="
                           << std::endl;
@@ -85,7 +87,7 @@ public:
         ws_server_.run();
     }
 
-    virtual ~WebSocketServerManager() { ws_server_.stop_listening(); }
+    virtual ~WebSocketServerManager() {}
 
     void OpenHandler(WebSocketServer* ws_server,
                      websocketpp::connection_hdl hdl) {
@@ -128,12 +130,13 @@ public:
         }
     }
 
+public:
+    /// WebRTCManger.
+    WebRTCManager rtc_manager_;
+
 private:
     uint16_t port_;
     WebSocketServer ws_server_;
-
-    /// WebRTCManger.
-    WebRTCManager rtc_manager_;
 
     /// WebSocket connection handler uniquely identifies a WebSocket connection.
     /// Whenever there is a WebSocket callback, we update this handler. In our
@@ -149,6 +152,8 @@ private:
 int main() {
     // TODO: add try-catch for WS connection.
     WebSocketServerManager ws_server_manager(8888);
+
+    ws_server_manager.rtc_manager_.quit();
     std::cout << "Server exits gracefully." << std::endl;
     return 0;
 }
