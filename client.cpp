@@ -17,15 +17,10 @@ class WebSocketClientManager {
 
 public:
     WebSocketClientManager(const std::string& uri) : uri_(uri), ws_client_() {
-        // Bind handlers.
         ws_client_.set_open_handler(bind(OpenHandler, &ws_client_, _1));
         ws_client_.set_close_handler(bind(CloseHandler, &ws_client_, _1));
         ws_client_.set_message_handler(
                 bind(MessageHandler, &ws_client_, _1, _2));
-
-        // Create web socket connections and start envent loop. Websocket is
-        // used in a single-thread mode. The event loop will be terminated when
-        // the WebRTC handshake completes.
         ws_client_.init_asio();
         websocketpp::lib::error_code ec;
         WebSocketClient::connection_ptr connection =
