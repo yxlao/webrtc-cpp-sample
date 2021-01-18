@@ -51,8 +51,7 @@ public:
         std::cout << "[WebSocketServerManager::MessageHandler]" << std::endl;
         std::cout << "Received message: " << message << std::endl;
 
-        Json::Value json = StringToJson(message);
-
+        const Json::Value json = StringToJson(message);
         const std::string type = json.get("type", "").asString();
         if (type == "offer") {
             const std::string offer = json.get("offer", "").asString();
