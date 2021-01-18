@@ -44,6 +44,12 @@ public:
             ws_client_.send(ws_hdl_, JsonToString(json),
                             websocketpp::frame::opcode::text);
         });
+        // DataChannel created. WebSocketClientManager exits its blocking state.
+        rtc_manager_.on_success([&]() {
+            std::cout << "[RTCClient::on_success]" << std::endl;
+            // ws_client_.close(ws_hdl_, websocketpp::close::status::normal,
+            // "");
+        });
         rtc_manager_.init();
 
         ws_client_.set_open_handler(bind(&WebSocketClientManager::OpenHandler,
@@ -61,7 +67,10 @@ public:
         ws_client_.run();
     }
 
-    virtual ~WebSocketClientManager() {}
+    virtual ~WebSocketClientManager() {
+        // TODO: close WebSocket connection if it is open.
+        // TODO: close WebRTC connection if it is open.
+    }
 
     // Send WebRTC offer once the WebSocket connection is established.
     void OpenHandler(WebSocketClient* ws_client,
@@ -136,5 +145,6 @@ private:
 int main() {
     // TODO: add try-catch for WS connection.
     WebSocketClientManager ws_client_manager("ws://localhost:8888");
+    std::cout << "DataChannel established" << std::endl;
     return 0;
 }

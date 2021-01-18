@@ -60,11 +60,15 @@ public:
     // When the status of the DataChannel changes, determine if the connection
     // is complete.
     void on_state_change() {
-        std::cout << "state: " << data_channel->state() << std::endl;
+        std::cout << "debug 3" << std::endl;
+        std::cout << "on_state_change state: " << data_channel->state()
+                  << std::endl;
+        std::cout << "debug 4" << std::endl;
         if (data_channel->state() == webrtc::DataChannelInterface::kOpen &&
             on_success) {
             on_success();
         }
+        std::cout << "debug 5" << std::endl;
     }
 
     // After the SDP is successfully created, it is set as a LocalDescription
@@ -163,7 +167,9 @@ public:
         void OnStateChange() override {
             std::cout << parent.name << ":" << std::this_thread::get_id() << ":"
                       << "DataChannelObserver::StateChange" << std::endl;
+            std::cout << "debug 1" << std::endl;
             parent.on_state_change();
+            std::cout << "debug 2" << std::endl;
         };
 
         // Message receipt.

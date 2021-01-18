@@ -43,6 +43,12 @@ public:
             ws_server_.send(ws_hdl_, JsonToString(json),
                             websocketpp::frame::opcode::text);
         });
+        // DataChannel created. WebSocketClientManager exits its blocking state.
+        rtc_manager_.on_success([&]() {
+            std::cout << "[RTCServer::on_success]" << std::endl;
+            // ws_server_.close(ws_hdl_, websocketpp::close::status::normal,
+            // "");
+        });
         rtc_manager_.init();
 
         ws_server_.set_open_handler(bind(&WebSocketServerManager::OpenHandler,
@@ -123,5 +129,6 @@ private:
 int main() {
     // TODO: add try-catch for WS connection.
     WebSocketServerManager ws_server_manager(8888);
+    std::cout << "DataChannel established" << std::endl;
     return 0;
 }
