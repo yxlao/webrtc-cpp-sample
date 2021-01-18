@@ -86,7 +86,7 @@ public:
             std::cout << "========== Offer SDP end ============" << std::endl;
             rtc_manager_.create_answer_sdp(offer);
         } else {
-            std::cerr << "Unkown json message type: " << type << std::endl;
+            throw std::runtime_error("Unkown json message type: " + type);
         }
     }
 

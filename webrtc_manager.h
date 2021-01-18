@@ -7,10 +7,41 @@
 #include <exception>
 #include <iostream>
 
+#include "json_utils.h"
+
 struct Ice {
     std::string candidate;
     std::string sdp_mid;
     int sdp_mline_index;
+
+    std::string ToJsonString() const {
+        Json::Value json;
+        json["type"] = "ice";
+        json["candidate"] = this->candidate;
+        json["sdpMid"] = this->sdp_mid;
+        json["sdpMLineIndex"] = this->sdp_mline_index;
+        return JsonToString(json);
+    }
+
+    static Ice FromJsonString(const std::string &json_str) {
+        const Json::Value json = StringToJson(json_str);
+        const std::string type = json.get("type", "").asString();
+        if (type == "ice") {
+            const std::string candidate = json.get("candidate", "").asString();
+            const std::string sdp_mid = json.get("sdpMid", "").asString();
+            const int sdp_mline_index = json.get("sdpMLineIndex", -1).asInt();
+            if (candidate == "" || sdp_mid == "" || sdp_mline_index == -1) {
+                throw std::runtime_error("Invalid json string for ICE.");
+            }
+            Ice ice;
+            ice.candidate = candidate;
+            ice.sdp_mid = sdp_mid;
+            ice.sdp_mline_index = sdp_mline_index;
+            return ice;
+        } else {
+            throw std::runtime_error("Unkown json message type: " + type);
+        }
+    }
 };
 
 class Connection {
