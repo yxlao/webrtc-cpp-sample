@@ -38,6 +38,8 @@ public:
         ws_client_.set_open_handler(bind(OnWebSocketOpen, &ws_client_, _1));
     }
 
+    virtual ~WebSocketClientManager() {}
+
     WebRTCManager InitWebRTCManager() { return WebRTCManager(); }
 
     static void OnWebSocketOpen(WebSocketClient* ws_client,
@@ -46,8 +48,6 @@ public:
         ws_client->send(hdl, "Hello from Client.",
                         websocketpp::frame::opcode::text);
     }
-
-    virtual ~WebSocketClientManager() {}
 
 private:
     std::string uri_;
