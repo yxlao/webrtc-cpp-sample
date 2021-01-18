@@ -24,14 +24,12 @@
 //     std::cout << "[Client::OnWebSocketClose]" << std::endl;
 // }
 
+using WebSocketClient = websocketpp::client<websocketpp::config::asio_client>;
 using websocketpp::lib::bind;
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
 
 class WebSocketClientManager {
-    using WebSocketClient =
-            websocketpp::client<websocketpp::config::asio_client>;
-
 public:
     WebSocketClientManager(const std::string& uri) : uri_(uri), ws_client_() {
         ws_client_.init_asio();
