@@ -23,6 +23,11 @@ public:
         rtc_manager_.on_ice([&](const Ice& ice) {
             std::cout << "[RTCServer::on_ice] " << std::endl;
             ice_list_.push_back(ice);
+            std::cout << "========== Sending ICE begin ==========" << std::endl;
+            std::cout << ice.ToJsonString();
+            std::cout << "========== Sending ICE end ============" << std::endl;
+            ws_server_.send(ws_hdl_, ice.ToJsonString(),
+                            websocketpp::frame::opcode::text);
         });
         rtc_manager_.on_message([&](const std::string& message) {
             std::cout << "[RTCServer::on_message] " << message << std::endl;
@@ -74,10 +79,11 @@ public:
         ws_hdl_ = hdl;
         const std::string message = message_ptr->get_payload();
         std::cout << "[WebSocketServerManager::MessageHandler]" << std::endl;
-        std::cout << "Received message: " << message << std::endl;
 
         const Json::Value json = StringToJson(message);
         const std::string type = json.get("type", "").asString();
+        std::cout << "Received message type: " << type << std::endl;
+        std::cout << "Received message: " << message << std::endl;
 
         if (type == "offer") {
             const std::string offer = json.get("offer", "").asString();
@@ -85,6 +91,12 @@ public:
             std::cout << offer;
             std::cout << "========== Offer SDP end ============" << std::endl;
             rtc_manager_.create_answer_sdp(offer);
+        } else if (type == "ice") {
+            Ice ice = Ice::FromJsonString(message);
+            rtc_manager_.push_ice(ice);
+            std::cout << "========== Receive ICE begin ==========" << std::endl;
+            std::cout << ice.ToJsonString();
+            std::cout << "========== Receive ICE end ============" << std::endl;
         } else {
             throw std::runtime_error("Unkown json message type: " + type);
         }
