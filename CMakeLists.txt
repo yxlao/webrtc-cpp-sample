@@ -12,7 +12,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wno-unused-parameter -std=c++1
 # Global target properties.
 function(set_global_target_properties target)
     # WEBRTC_LINUX, WEBRTC_MAC, WEBRTC_POSIX, WEBRTC_WIN.
-    target_compile_definitions(sample PRIVATE WEBRTC_LINUX=1 WEBRTC_POSIX=1)
+    target_compile_definitions(${target} PRIVATE WEBRTC_LINUX=1 WEBRTC_POSIX=1)
 
     # Include.
     target_include_directories(${target} PRIVATE SYSTEM
