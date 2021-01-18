@@ -20,10 +20,9 @@ class WebSocketClientManager {
 public:
     WebSocketClientManager(const std::string& uri)
         : uri_(uri), ws_client_(), rtc_manager_("client") {
-        std::list<Ice> ice_list;
         rtc_manager_.on_ice([&](const Ice& ice) {
             std::cout << "[RTCClient::on_ice] " << std::endl;
-            // ice_list.push_back(ice);
+            ice_list_.push_back(ice);
         });
         rtc_manager_.on_message([&](const std::string& message) {
             std::cout << "[RTCClient::on_message] " << message << std::endl;
@@ -84,13 +83,30 @@ public:
     }
 
 private:
+    /// WebSocket server URI that the client will connect to, in the form of
+    /// "address:port". The server shall listen to the same port. This is not
+    /// the WebRTC server address. WebRTC server address is generated
+    /// automatically during WebRTC handshake.
     std::string uri_;
+
+    /// WebSocketpp client is used to send/receive WebRTC handshake (a.k.a.
+    /// signaling) messages. WebRTC protocol defines the message formats but
+    /// does not take care of sending/receiving handshake messages. The
+    /// WebSocket will be closed once the WebRTC connection is established.
     WebSocketClient ws_client_;
+
+    /// WebRTCManger.
     WebRTCManager rtc_manager_;
+
     /// WebSocket connection handler uniquely identifies a WebSocket connection.
     /// Whenever there is a WebSocket callback, we update this handler. In our
     /// use case, they shall all be the same one.
     websocketpp::connection_hdl ws_hdl_;
+
+    /// List of ICE candidates. It updates when rtc_manager_.on_ice() is
+    /// triggered. The server and client exchange their ICE candidate list and
+    /// select a candidate to set up the connection.
+    std::list<Ice> ice_list_;
 };
 
 int main() {
