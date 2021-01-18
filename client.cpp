@@ -52,3 +52,12 @@ int main() {
 
     return 0;
 }
+
+// int main() {
+//     // Simple client that can send and receive messages.
+//     WebRTCClient rtc_client = InitWebRTCClient("ws://localhost:8888");
+//     rtc_client.send("Hello world!");
+//     rtc_client.send("CLOSE_SERVER");
+//     rtc_client.close();
+//     return 0;
+// }

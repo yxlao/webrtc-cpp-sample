@@ -53,3 +53,11 @@ int main() {
 
     return 0;
 }
+
+// TODO: goal
+// int main() {
+//     // Simple echo server that receives client's message and reply back.
+//     WebRTCServer rtc_server = InitWebRTCServer("8888");
+//     rtc_server.run();
+//     return 0;
+// }
