@@ -3,6 +3,9 @@ project(webrtc-cpp CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# Jsoncpp dependency.
+include(jsoncpp.cmake)
+
 # Global flags.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wno-unused-parameter -std=c++11")
 
@@ -18,11 +21,22 @@ function(set_global_target_properties target)
         websocketpp
         picojson
         asio/asio/include
+        ${JSONCPP_INCLUDE_DIRS}
     )
 
     # Link.
-    target_link_directories(${target} PRIVATE webrtc/lib)
-    target_link_libraries(${target} PRIVATE webrtc pthread)
+    target_link_directories(${target} PRIVATE
+        webrtc/lib
+        ${JSONCPP_LIB_DIR}
+    )
+    target_link_libraries(${target} PRIVATE
+        webrtc
+        pthread
+        ${JSONCPP_LIBRARIES}
+    )
+
+    # Dependency.
+    add_dependencies(${target} ext_jsoncpp)
 endfunction()
 
 add_executable(sample main.cpp)
