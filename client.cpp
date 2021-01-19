@@ -1,5 +1,6 @@
 #include <json/json.h>
 
+#include <chrono>
 #include <iostream>
 #include <string>
 
@@ -13,6 +14,9 @@
 using websocketpp::lib::bind;
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
+
+// TODO: Put this in a better place.
+std::chrono::high_resolution_clock::time_point g_last_sent_time;
 
 class WebSocketClientManager {
     using WebSocketClient =
@@ -35,6 +39,13 @@ public:
             std::cout << "========= Receive message begin ======" << std::endl;
             std::cout << message << std::endl;
             std::cout << "========= Receive message end ========" << std::endl;
+            std::chrono::high_resolution_clock::time_point now_time =
+                    std::chrono::high_resolution_clock::now();
+            std::cout << "Time since last sent: "
+                      << std::chrono::duration_cast<std::chrono::milliseconds>(
+                                 now_time - g_last_sent_time)
+                                 .count()
+                      << "ms" << std::endl;
         });
         rtc_manager_.on_sdp([&](const std::string& sdp) {
             std::cout << "[RTCClient::on_sdp] " << std::endl;
@@ -162,6 +173,7 @@ int main() {
             std::cout << "========= Send message begin =========" << std::endl;
             std::cout << message << std::endl;
             std::cout << "========= Send message end ===========" << std::endl;
+            g_last_sent_time = std::chrono::high_resolution_clock::now();
             ws_client_manager.rtc_manager_.send(message);
         }
     }
