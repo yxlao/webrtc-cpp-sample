@@ -94,24 +94,12 @@ function sdp3() {
   peerConnection.setRemoteDescription(sdp);
 }
 
-function ice1() {
-  output("ICE:begin");
-  output(JSON.stringify(iceArray));
-  iceArray = [];
-  output("ICE:end");
-}
-
-function ice2() {
-  var ices = JSON.parse(input());
-  for (var ice of ices) {
-    var iceObj = new RTCIceCandidate(ice);
-    peerConnection.addIceCandidate(iceObj);
-  }
-}
-
 function send() {
   var data = input();
   dataChannel.send(data);
+  if (data == "exit") {
+    quit();
+  }
 }
 
 function quit() {
@@ -119,6 +107,7 @@ function quit() {
   dataChannel = null;
   peerConnection.close();
   peerConnection = null;
+  output("Client exits gracefully.");
 }
 
 function onWebSocketOpen() {
