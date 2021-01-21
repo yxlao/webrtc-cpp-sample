@@ -1,8 +1,15 @@
 var dataChannel = null;
 var peerConnection = null;
+// var pcConfig = {
+//   iceServers: [
+//     { urls: "stun:stun.services.mozilla.com" },
+//     { urls: "stun:stun.l.google.com:19302" },
+//   ],
+// };
 var pcConfig = {
   iceServers: [{ url: "stun:stun.l.google.com:19302" }],
 };
+
 var iceArray = [];
 let webSocketConnection = null;
 const webSocketUrl = "ws://localhost:8888";
@@ -39,7 +46,7 @@ function onIceConnectionStateChange(evt) {
 
 function setDataChannelEvents(dataChannel) {
   dataChannel.onerror = function (error) {
-    ouptput("Data Channel onerror:" + error);
+    output("Data Channel onerror:" + error);
   };
 
   dataChannel.onmessage = function (event) {
@@ -97,7 +104,11 @@ function onWebSocketOpen() {
     dataChannelOptions
   );
   setDataChannelEvents(dataChannel);
-  peerConnection.createOffer(onOfferSuccess, onOfferFailure, null);
+  let offerOptions = {
+    offerToReceiveAudio: 0,
+    offerToReceiveVideo: 0,
+  };
+  peerConnection.createOffer(onOfferSuccess, onOfferFailure, offerOptions);
 }
 
 function onWebSocketMessage(event) {
