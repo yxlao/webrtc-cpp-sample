@@ -99,6 +99,7 @@ function onWebSocketOpen() {
   setDataChannelEvents(dataChannel);
   peerConnection.createOffer(onOfferSuccess, onOfferFailure, null);
 }
+
 function onWebSocketMessage(event) {
   const messageObject = JSON.parse(event.data);
   console.log("[Client] onWebSocketMessage:" + messageObject.type);
