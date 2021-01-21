@@ -4,7 +4,7 @@ project(webrtc-cpp CXX)
 set(CMAKE_CXX_STANDARD 14)
 
 # Jsoncpp dependency.
-include(jsoncpp.cmake)
+include(jsoncpp/jsoncpp.cmake)
 
 # Global flags.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wno-unused-parameter -std=c++11")
@@ -16,17 +16,20 @@ function(set_global_target_properties target)
 
     # Include.
     target_include_directories(${target} PRIVATE SYSTEM
-        webrtc/include
-        webrtc/include/third_party/abseil-cpp
-        websocketpp
-        picojson
-        asio/asio/include
+        ${PROJECT_SOURCE_DIR}/webrtc/include
+        ${PROJECT_SOURCE_DIR}/webrtc/include/third_party/abseil-cpp
+        ${PROJECT_SOURCE_DIR}/websocketpp
+        ${PROJECT_SOURCE_DIR}/picojson
+        ${PROJECT_SOURCE_DIR}/asio/asio/include
         ${JSONCPP_INCLUDE_DIRS}
+    )
+    target_include_directories(${target} PRIVATE
+        ${PROJECT_SOURCE_DIR}/src
     )
 
     # Link.
     target_link_directories(${target} PRIVATE
-        webrtc/lib
+        ${PROJECT_SOURCE_DIR}/webrtc/lib
         ${JSONCPP_LIB_DIR}
     )
     target_link_libraries(${target} PRIVATE
@@ -35,15 +38,18 @@ function(set_global_target_properties target)
         ${JSONCPP_LIBRARIES}
     )
 
+    # Output location.
+    set_target_properties(${target}
+        PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+    )
+
     # Dependency.
     add_dependencies(${target} ext_jsoncpp)
 endfunction()
 
-add_executable(sample main.cpp)
-set_global_target_properties(sample)
+add_subdirectory(src)
 
-add_executable(server server.cpp)
-set_global_target_properties(server)
 
-add_executable(client client.cpp)
-set_global_target_properties(client)

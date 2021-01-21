@@ -9,8 +9,8 @@
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
-#include "json_utils.h"
-#include "webrtc_manager.h"
+#include "util/json_utils.h"
+#include "util/webrtc_manager.h"
 
 using websocketpp::lib::bind;
 using websocketpp::lib::placeholders::_1;
