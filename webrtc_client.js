@@ -27,9 +27,7 @@ function onDataChannel(evt) {
 
 function onIceCandidate(evt) {
   if (evt.candidate) {
-    output("ice");
-    output(evt.candidate);
-    iceArray.push(evt.candidate);
+    output("got ice candidate" + evt.candidate);
   } else {
     output("end of ice candidate" + evt.eventPhase);
   }
@@ -58,7 +56,23 @@ function setDataChannelEvents(dataChannel) {
   };
 }
 
-function sdp1() {
+function send() {
+  var data = input();
+  dataChannel.send(data);
+  if (data == "exit") {
+    quit();
+  }
+}
+
+function quit() {
+  dataChannel.close();
+  dataChannel = null;
+  peerConnection.close();
+  peerConnection = null;
+  output("Client exits gracefully.");
+}
+
+function onWebSocketOpen() {
   function onOfferSuccess(sessionDescription) {
     output("[client] onOfferSuccess");
     peerConnection.setLocalDescription(sessionDescription);
@@ -85,39 +99,10 @@ function sdp1() {
   setDataChannelEvents(dataChannel);
   peerConnection.createOffer(onOfferSuccess, onOfferFailure, null);
 }
-
-function sdp3() {
-  var sdp = new RTCSessionDescription({
-    type: "answer",
-    sdp: input(),
-  });
-  peerConnection.setRemoteDescription(sdp);
-}
-
-function send() {
-  var data = input();
-  dataChannel.send(data);
-  if (data == "exit") {
-    quit();
-  }
-}
-
-function quit() {
-  dataChannel.close();
-  dataChannel = null;
-  peerConnection.close();
-  peerConnection = null;
-  output("Client exits gracefully.");
-}
-
-function onWebSocketOpen() {
-  sdp1();
-}
 function onWebSocketMessage(event) {
   const messageObject = JSON.parse(event.data);
   console.log("[Client] onWebSocketMessage:" + messageObject.type);
   if (messageObject.type == "answer") {
-    // sdp3()
     var sdp = new RTCSessionDescription({
       type: "answer",
       sdp: messageObject.answer, // TODO: rename this to sdp.
