@@ -54,7 +54,7 @@ public:
             std::cout << "========== Offer SDP end ============" << std::endl;
             Json::Value json;
             json["type"] = "offer";
-            json["offer"] = sdp;
+            json["sdp"] = sdp;
             ws_client_.send(ws_hdl_, JsonToString(json),
                             websocketpp::frame::opcode::text);
         });

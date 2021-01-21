@@ -115,7 +115,7 @@ public:
         std::cout << "Received message: " << message << std::endl;
 
         if (type == "offer") {
-            const std::string offer = json.get("offer", "").asString();
+            const std::string offer = json.get("sdp", "").asString();
             std::cout << "========== Offer SDP begin ==========" << std::endl;
             std::cout << offer;
             std::cout << "========== Offer SDP end ============" << std::endl;
