@@ -27,6 +27,8 @@ function onDataChannel(evt) {
 
 function onIceCandidate(evt) {
   if (evt.candidate) {
+    output("ice");
+    output(evt.candidate);
     iceArray.push(evt.candidate);
   } else {
     output("end of ice candidate" + evt.eventPhase);
@@ -84,31 +86,6 @@ function sdp1() {
   peerConnection.createOffer(onOfferSuccess, onOfferFailure, null);
 }
 
-function sdp2() {
-  function onAnswerSuccess(sessionDescription) {
-    peerConnection.setLocalDescription(sessionDescription);
-    output("createAnswer -> onAnswerSuccess");
-    output("Answer SDP:begin");
-    output(sessionDescription.sdp);
-    output("Answer SDP:end");
-  }
-
-  function onAnswerFailure() {
-    output("createAnswer -> onAnswerFailure");
-  }
-
-  var sdp = new RTCSessionDescription({
-    type: "offer",
-    sdp: input(),
-  });
-  peerConnection = new RTCPeerConnection(pcConfig);
-  peerConnection.onicecandidate = onIceCandidate;
-  peerConnection.ondatachannel = onDataChannel;
-  peerConnection.oniceconnectionstatechange = onIceConnectionStateChange;
-  peerConnection.setRemoteDescription(sdp);
-  peerConnection.createAnswer(onAnswerSuccess, onAnswerFailure, null);
-}
-
 function sdp3() {
   var sdp = new RTCSessionDescription({
     type: "answer",
@@ -147,7 +124,23 @@ function quit() {
 function onWebSocketOpen() {
   sdp1();
 }
-function onWebSocketMessage(event) {}
+function onWebSocketMessage(event) {
+  const messageObject = JSON.parse(event.data);
+  console.log("[Client] onWebSocketMessage:" + messageObject.type);
+  if (messageObject.type == "answer") {
+    // sdp3()
+    var sdp = new RTCSessionDescription({
+      type: "answer",
+      sdp: messageObject.answer, // TODO: rename this to sdp.
+    });
+    peerConnection.setRemoteDescription(sdp);
+  } else if (messageObject.type == "ice") {
+    var iceObj = new RTCIceCandidate(messageObject);
+    peerConnection.addIceCandidate(iceObj);
+  } else {
+    throw "Unknown message type.";
+  }
+}
 
 function connect() {
   webSocketConnection = new WebSocket(webSocketUrl);
