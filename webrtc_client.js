@@ -4,6 +4,8 @@ var pcConfig = {
   iceServers: [{ url: "stun:stun.l.google.com:19302" }],
 };
 var iceArray = [];
+let webSocketConnection = null;
+const webSocketUrl = "ws://localhost:8888";
 
 function output(log) {
   var stdout = document.getElementById("stdout");
@@ -56,11 +58,10 @@ function setDataChannelEvents(dataChannel) {
 
 function sdp1() {
   function onOfferSuccess(sessionDescription) {
+    output("[client] onOfferSuccess");
     peerConnection.setLocalDescription(sessionDescription);
-    output("createOffer -> onOfferSuccess");
-    output("Offer SDP:begin");
-    output(sessionDescription.sdp);
-    output("Offer SDP:end");
+    console.log(sessionDescription);
+    webSocketConnection.send(JSON.stringify(sessionDescription.toJSON()));
   }
 
   function onOfferFailure() {
@@ -72,8 +73,8 @@ function sdp1() {
   peerConnection.ondatachannel = onDataChannel;
   peerConnection.oniceconnectionstatechange = onIceConnectionStateChange;
   var dataChannelOptions = {
-    ordered: true, // 順序を保証する
-    maxRetransmitTime: 3000, // ミリ秒
+    ordered: true,
+    maxRetransmitTime: 3000,
   };
   dataChannel = peerConnection.createDataChannel(
     "data_channel",
@@ -141,4 +142,15 @@ function quit() {
   dataChannel = null;
   peerConnection.close();
   peerConnection = null;
+}
+
+function onWebSocketOpen() {
+  sdp1();
+}
+function onWebSocketMessage(event) {}
+
+function connect() {
+  webSocketConnection = new WebSocket(webSocketUrl);
+  webSocketConnection.onopen = onWebSocketOpen;
+  webSocketConnection.onmessage = onWebSocketMessage;
 }
